@@ -15,7 +15,7 @@
 #include <zephyr/ztest.h>
 #include <zephyr/logging/log.h>
 
-ZTEST(clock, test_gettimeofday)
+ZTEST(posix_timers, test_gettimeofday)
 {
 	struct timeval tv;
 	struct timespec ts;
@@ -39,5 +39,3 @@ ZTEST(clock, test_gettimeofday)
 	tv_to_ts(&tv, &ts);
 	zassert_true(tp_ge(&rts, &ts));
 }
-
-ZTEST_SUITE(clock, NULL, NULL, NULL, NULL, NULL);
