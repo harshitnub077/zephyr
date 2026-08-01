@@ -1,5 +1,14 @@
 common:
-  tags: posix
+  filter: not CONFIG_NATIVE_LIBC
+  tags:
+    - posix
+    - system_database
+  # 1 tier0 platform per supported architecture
+  platform_key:
+    - arch
+    - simulation
+  integration_platforms:
+    - qemu_x86_64
+  min_ram: 64
 tests:
-  portability.posix.system_database:
-    min_ram: 64
+  portability.posix.system_database: {}
