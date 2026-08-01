@@ -1,0 +1,6 @@
+common:
+  tags:
+    - posix
+tests:
+  portability.posix.xsi_realtime_threads:
+    filter: not CONFIG_NATIVE_LIBC

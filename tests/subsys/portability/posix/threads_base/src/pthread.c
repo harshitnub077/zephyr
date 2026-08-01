@@ -224,38 +224,6 @@ static void *thread_top_term(void *p1)
 	return NULL;
 }
 
-/* Test the internal priority conversion functions */
-int zephyr_to_posix_priority(int z_prio, int *policy);
-int posix_to_zephyr_priority(int priority, int policy);
-ZTEST(pthread, test_pthread_priority_conversion)
-{
-	/*
-	 *    ZEPHYR [-CONFIG_NUM_COOP_PRIORITIES, -1]
-	 *                       TO
-	 * POSIX(FIFO) [0, CONFIG_NUM_COOP_PRIORITIES - 1]
-	 */
-	for (int z_prio = -CONFIG_NUM_COOP_PRIORITIES, prio = CONFIG_NUM_COOP_PRIORITIES - 1,
-		 p_prio, policy;
-	     z_prio <= -1; z_prio++, prio--) {
-		p_prio = zephyr_to_posix_priority(z_prio, &policy);
-		zassert_equal(policy, SCHED_FIFO);
-		zassert_equal(p_prio, prio, "%d %d\n", p_prio, prio);
-		zassert_equal(z_prio, posix_to_zephyr_priority(p_prio, SCHED_FIFO));
-	}
-
-	/*
-	 *  ZEPHYR [0, CONFIG_NUM_PREEMPT_PRIORITIES - 1]
-	 *                      TO
-	 * POSIX(RR) [0, CONFIG_NUM_PREEMPT_PRIORITIES - 1]
-	 */
-	for (int z_prio = 0, prio = CONFIG_NUM_PREEMPT_PRIORITIES - 1, p_prio, policy;
-	     z_prio < CONFIG_NUM_PREEMPT_PRIORITIES; z_prio++, prio--) {
-		p_prio = zephyr_to_posix_priority(z_prio, &policy);
-		zassert_equal(policy, SCHED_RR);
-		zassert_equal(p_prio, prio, "%d %d\n", p_prio, prio);
-		zassert_equal(z_prio, posix_to_zephyr_priority(p_prio, SCHED_RR));
-	}
-}
 
 ZTEST(pthread, test_pthread_execution)
 {
@@ -533,31 +501,6 @@ ZTEST(pthread, test_pthread_testcancel)
 	zassert_false(testcancel_failed);
 }
 
-static void *test_pthread_setschedprio_fn(void *arg)
-{
-	int policy;
-	int prio = 0;
-	struct sched_param param;
-	pthread_t self = pthread_self();
-
-	zassert_equal(pthread_setschedprio(self, PRIO_INVALID), EINVAL, "EINVAL was expected");
-	zassert_equal(pthread_setschedprio(PTHREAD_INVALID, prio), ESRCH, "ESRCH was expected");
-
-	zassert_ok(pthread_setschedprio(self, prio));
-	param.sched_priority = ~prio;
-	zassert_ok(pthread_getschedparam(self, &policy, &param));
-	zassert_equal(param.sched_priority, prio, "Priority unchanged");
-
-	return NULL;
-}
-
-ZTEST(pthread, test_pthread_setschedprio)
-{
-	pthread_t th;
-
-	zassert_ok(pthread_create(&th, NULL, test_pthread_setschedprio_fn, NULL));
-	zassert_ok(pthread_join(th, NULL));
-}
 
 static void before(void *arg)
 {

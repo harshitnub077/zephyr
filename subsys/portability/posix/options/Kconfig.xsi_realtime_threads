@@ -1,0 +1,43 @@
+# Copyright (c) 2024 Tenstorrent AI ULC
+#
+# SPDX-License-Identifier: Apache-2.0
+
+config XSI_REALTIME_THREADS
+	bool "X/Open Realtime Threads Option Group"
+	help
+	  This option provides support for X/Open Realtime Threads.
+
+	  For more information, please see
+	  https://pubs.opengroup.org/onlinepubs/9699919799/xrat/V4_subprofiles.html
+
+if XSI_REALTIME_THREADS
+
+config POSIX_THREAD_PRIORITY_SCHEDULING
+	bool "Run POSIX threads with different priorities and schedulers"
+	help
+	  Enabling this option allows the application to configure different priorities and
+	  scheduling algorithms for different threads via functions such as pthread_setschedparam()
+	  and pthread_setschedprio(). This is required for Realtime Threads and Advanced Realtime
+	  Threads.
+
+	  For more information, please see
+	  https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap02.html#tag_02_01_06
+	  https://man7.org/linux/man-pages/man7/posixoptions.7.html
+
+config POSIX_THREAD_PRIO_INHERIT
+	bool "POSIX mutex priority inheritance"
+	help
+	  Select 'y' here to enable POSIX mutex priority inheritance.
+
+	  For more information, please see
+	  https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutexattr_getprotocol.html
+
+config POSIX_THREAD_PRIO_PROTECT
+	bool "POSIX mutex priority protection"
+	help
+	  Select 'y' here to enable POSIX mutex priority protection.
+
+	  For more information, please see
+	  https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutexattr_getprotocol.html
+
+endif # XSI_REALTIME_THREADS
