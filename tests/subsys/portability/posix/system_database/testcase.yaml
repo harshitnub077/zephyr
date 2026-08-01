@@ -1,0 +1,5 @@
+common:
+  tags: posix
+tests:
+  portability.posix.system_database:
+    min_ram: 64
