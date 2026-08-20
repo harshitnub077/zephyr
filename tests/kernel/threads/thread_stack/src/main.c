@@ -328,6 +328,19 @@ void stest_thread_launch(uint32_t flags, bool drop)
 {
 	int ret;
 	size_t unused;
+	int expected = 0;
+
+	if (IS_ENABLED(CONFIG_NO_UNUSED_STACK_INSPECTION)) {
+#ifdef CONFIG_USERSPACE
+		bool is_usermode = ((flags & K_USER) != 0) || drop;
+
+		if (!is_usermode) {
+			expected = -ENOTSUP;
+		}
+#else
+		expected = -ENOTSUP;
+#endif
+	}
 
 	k_thread_create(&test_thread, scenario_data.stack, STEST_STACKSIZE,
 			stest_thread_entry,
@@ -351,8 +364,10 @@ void stest_thread_launch(uint32_t flags, bool drop)
 	} else
 #endif /* CONFIG_THREAD_STACK_MEM_MAPPED */
 	{
-		zassert_equal(ret, 0, "failed to calculate unused stack space\n");
-		printk("target thread unused stack space: %zu\n", unused);
+		zassert_equal(ret, expected, "failed to calculate unused stack space\n");
+		if (ret == 0) {
+			printk("target thread unused stack space: %zu\n", unused);
+		}
 	}
 }
 
