@@ -1208,6 +1208,10 @@ static bool update_usr_buf(const struct device *dev, uint32_t len, bool notify_a
 	struct uarte_async_rx *async_rx = &data->async->rx;
 	struct uarte_async_rx_cbwt *cbwt_data = cfg->cbwt_data;
 
+	if (async_rx->buf == NULL) {
+		return false;
+	}
+
 	anomaly_byte_handle(dev);
 
 	do {
