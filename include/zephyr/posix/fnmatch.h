@@ -15,9 +15,14 @@ extern "C" {
 #define FNM_NOESCAPE 0x01
 #define FNM_PATHNAME 0x02
 #define FNM_PERIOD   0x04
-#if defined(_GNU_SOURCE)
+
+#ifndef FNM_LEADING_DIR
 #define FNM_LEADING_DIR 0x08
+#endif
+#ifndef FNM_CASEFOLD
 #define FNM_CASEFOLD    0x10
+#endif
+#ifndef FNM_EXTMATCH
 #define FNM_EXTMATCH    0x20
 #endif
 #define FNM_IGNORECASE FNM_CASEFOLD

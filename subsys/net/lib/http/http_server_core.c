@@ -5,8 +5,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/* required for FNM_LEADING_DIR */
-#define _GNU_SOURCE
 #include <errno.h>
 #include <fnmatch.h>
 #include <stdbool.h>

@@ -276,6 +276,9 @@ Networking
   :kconfig:option:`CONFIG_NET_SOCKETS_DNS_PREFER_IPV4` to keep IPv4 first, for example with
   offloaded network interfaces, where reachability cannot be determined.
 
+* The header ``<zephyr/posix/net/if_arp.h>`` has moved to ``<zephyr/net/if_arp.h>``. Applications
+  should update their include paths accordingly.
+
 Other subsystems
 ****************
 

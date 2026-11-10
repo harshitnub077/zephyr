@@ -53,4 +53,6 @@ add_custom_command(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-zephyr_include_directories(${ZEPHYR_BASE}/include/zephyr/posix)
+if(CONFIG_POSIX_BASE_DEFINITIONS OR CONFIG_POSIX_NETWORKING OR CONFIG_EVENTFD)
+  zephyr_include_directories(${ZEPHYR_BASE}/include/zephyr/posix)
+endif()
